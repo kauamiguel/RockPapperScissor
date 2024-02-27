@@ -12,9 +12,11 @@
 		CE3356162B8D068600E4EA0A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE3356142B8D068600E4EA0A /* Main.storyboard */; };
 		CE3356182B8D068700E4EA0A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE3356172B8D068700E4EA0A /* Assets.xcassets */; };
 		CE33561B2B8D068700E4EA0A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE3356192B8D068700E4EA0A /* LaunchScreen.storyboard */; };
-		CE3356232B8D069200E4EA0A /* RockPapperScissorsModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CE3356222B8D069200E4EA0A /* RockPapperScissorsModel.mlmodel */; };
 		CE3356282B8D074700E4EA0A /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3356272B8D074700E4EA0A /* GameView.swift */; };
 		CE33562B2B8D080500E4EA0A /* ConvertImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE33562A2B8D080500E4EA0A /* ConvertImage.swift */; };
+		CE33562D2B8D0A0A00E4EA0A /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE33562C2B8D0A0A00E4EA0A /* GameController.swift */; };
+		CE33562F2B8D0B4200E4EA0A /* CoreMLResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE33562E2B8D0B4200E4EA0A /* CoreMLResult.swift */; };
+		CE81CA492B8E60DF00613449 /* RockPapperScissorsModel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CE81CA482B8E60DF00613449 /* RockPapperScissorsModel.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,9 +27,11 @@
 		CE3356172B8D068700E4EA0A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE33561A2B8D068700E4EA0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CE33561C2B8D068700E4EA0A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CE3356222B8D069200E4EA0A /* RockPapperScissorsModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = RockPapperScissorsModel.mlmodel; sourceTree = "<group>"; };
 		CE3356272B8D074700E4EA0A /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		CE33562A2B8D080500E4EA0A /* ConvertImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvertImage.swift; sourceTree = "<group>"; };
+		CE33562C2B8D0A0A00E4EA0A /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
+		CE33562E2B8D0B4200E4EA0A /* CoreMLResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreMLResult.swift; sourceTree = "<group>"; };
+		CE81CA482B8E60DF00613449 /* RockPapperScissorsModel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = RockPapperScissorsModel.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,7 +68,6 @@
 				CE3356262B8D06C800E4EA0A /* CameraConfig */,
 				CE3356252B8D06C000E4EA0A /* Game */,
 				CE3356242B8D06AE00E4EA0A /* Config */,
-				CE3356222B8D069200E4EA0A /* RockPapperScissorsModel.mlmodel */,
 				CE33561C2B8D068700E4EA0A /* Info.plist */,
 			);
 			path = RockPapperScissorsGame;
@@ -86,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				CE3356272B8D074700E4EA0A /* GameView.swift */,
+				CE33562C2B8D0A0A00E4EA0A /* GameController.swift */,
 			);
 			path = Game;
 			sourceTree = "<group>";
@@ -100,7 +104,9 @@
 		CE3356292B8D07F500E4EA0A /* CoreMLConfig */ = {
 			isa = PBXGroup;
 			children = (
+				CE81CA482B8E60DF00613449 /* RockPapperScissorsModel.mlmodel */,
 				CE33562A2B8D080500E4EA0A /* ConvertImage.swift */,
+				CE33562E2B8D0B4200E4EA0A /* CoreMLResult.swift */,
 			);
 			path = CoreMLConfig;
 			sourceTree = "<group>";
@@ -176,9 +182,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE3356232B8D069200E4EA0A /* RockPapperScissorsModel.mlmodel in Sources */,
+				CE33562F2B8D0B4200E4EA0A /* CoreMLResult.swift in Sources */,
+				CE33562D2B8D0A0A00E4EA0A /* GameController.swift in Sources */,
 				CE33562B2B8D080500E4EA0A /* ConvertImage.swift in Sources */,
 				CE33560F2B8D068600E4EA0A /* AppDelegate.swift in Sources */,
+				CE81CA492B8E60DF00613449 /* RockPapperScissorsModel.mlmodel in Sources */,
 				CE3356282B8D074700E4EA0A /* GameView.swift in Sources */,
 				CE3356112B8D068600E4EA0A /* SceneDelegate.swift in Sources */,
 			);
@@ -336,12 +344,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RockPapperScissorsGame/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
+				INFOPLIST_KEY_NSCameraUsageDescription = "May i have permission to use Camera?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -355,7 +363,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -370,12 +378,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = RockPapperScissorsGame/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
+				INFOPLIST_KEY_NSCameraUsageDescription = "May i have permission to use Camera?";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -389,7 +397,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

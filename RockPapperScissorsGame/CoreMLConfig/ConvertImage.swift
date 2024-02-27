@@ -7,7 +7,7 @@
 
 import CoreVideo
 
-class ImageProcessor {
+class ConvertImage {
     
     static func pixelBuffer (forImage image : CGImage) -> CVPixelBuffer? {
         
