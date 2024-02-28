@@ -6,8 +6,10 @@
 //
 
 import UIKit
+import AVKit
+import Vision
 
-class GameController : UIViewController{
+class GameController : UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate{
     
     let gameView = GameView()
     
@@ -16,15 +18,44 @@ class GameController : UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        gameView.setupView(view: self.view)
-        gameView.takePictureButton.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
+        let captureSession = AVCaptureSession()
+        
+        guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else { return }
+        guard let input = try? AVCaptureDeviceInput(device: captureDevice) else { return }
+        captureSession.addInput(input)
+        
+        captureSession.startRunning()
+        
+        let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        
+        view.layer.addSublayer(previewLayer)
+        previewLayer.frame = view.frame
+        
+        let outputData = AVCaptureVideoDataOutput()
+        
+        outputData.setSampleBufferDelegate(self, queue: DispatchQueue(label: "Queue"))
+        
+        captureSession.addOutput(outputData)
+        
+       
     }
     
-    @objc func buttonAction(){
-        let picker = UIImagePickerController()
-        picker.delegate = self
-        picker.sourceType = .camera
-        present(picker, animated: true)
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        
+        guard let buffer:CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        
+        guard let dataModel = try? VNCoreMLModel(for:RockPapperScissorsModel().model) else { return }
+        
+        let request = VNCoreMLRequest(model: dataModel){ (res, error) in
+            guard let result = res.results as? [VNClassificationObservation] else { return }
+            
+            guard let observationData = result.first else { return }
+            
+            print(observationData.identifier, observationData.confidence)
+        }
+        
+        try? VNImageRequestHandler(cvPixelBuffer: buffer, options: [:]).perform([request])
+        
     }
     
 }
