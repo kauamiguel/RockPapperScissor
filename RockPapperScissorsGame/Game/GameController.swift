@@ -18,9 +18,11 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         captureSession.addInput(input)
         
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        previewLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         self.previewLayer = previewLayer
         
         view.layer.addSublayer(previewLayer)
+        
         previewLayer.frame = view.frame
         
         let outputData = AVCaptureVideoDataOutput()
@@ -28,6 +30,8 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         outputData.setSampleBufferDelegate(self, queue: DispatchQueue(label: "Queue"))
         
         captureSession.addOutput(outputData)
+        
+        startCamera()
         
         // Add a button to freeze/unfreeze the camera frame
         let buttonWidth: CGFloat = 100
@@ -41,6 +45,10 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         view.addSubview(freezeButton)
     }
     
+    func startCamera(){
+        captureSession.startRunning()
+    }
+    
     @objc func toggleCameraFreeze() {
         if isCameraPaused {
             captureSession.startRunning()
@@ -51,9 +59,8 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        guard let buffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
-        guard !isCameraPaused else { return } // Don't process frames if camera is paused
+        guard let buffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
         guard let dataModel = try? VNCoreMLModel(for: RockPapperScissorsModel().model) else { return }
         
@@ -68,22 +75,22 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         try? VNImageRequestHandler(cvPixelBuffer: buffer, options: [:]).perform([request])
     }
     
+    //Function that create a dountDown to take an automatic picture
+       func takePicture(){
+           var timeLeft = 3
+           
+           Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+
+               if timeLeft == 0{
+                   
+                   timer.invalidate()
+                   return
+               }
+               
+               print(timeLeft)
+               timeLeft -= 1
+           }
+       }
+    
 }
 
-extension GameController: UIImagePickerControllerDelegate & UINavigationControllerDelegate {
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        picker.dismiss(animated: true)
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        
-        picker.dismiss(animated: true)
-        
-        guard let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else { return }
-        
-        guard let result = coreMlResult.result(image: image) else { return }
-        
-        print(result)
-    }
-}
