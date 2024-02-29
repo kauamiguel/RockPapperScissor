@@ -15,16 +15,17 @@ class BotOpponent{
     
     //MARK: Function that choses a random move to play
     func randomPlay(){
-        let random = Int.random(in: 0...2)
         
-        while let previous = lastNumber, random == previous {
-            let random = Int.random(in: 0...2)
+        var randomNumber = Int.random(in: 0...2)
+        
+        while let previous = lastNumber, randomNumber == previous {
+            randomNumber = Int.random(in: 0...2)
         }
         
-        lastNumber = random
+        lastNumber = randomNumber
         
         
-        switch random{
+        switch randomNumber{
         case 0:
             self.image = UIImage(named: "Rock")
         case 1:
