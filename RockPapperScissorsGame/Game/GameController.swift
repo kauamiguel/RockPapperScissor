@@ -46,16 +46,22 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     func startCamera(){
-        captureSession.startRunning()
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let self = self else { return }
+            captureSession.startRunning()
+        }
     }
     
     @objc func toggleCameraFreeze() {
-        if isCameraPaused {
-            captureSession.startRunning()
-        } else {
-            captureSession.stopRunning()
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let self = self else { return }
+            if isCameraPaused {
+                captureSession.startRunning()
+            } else {
+                captureSession.stopRunning()
+            }
+            isCameraPaused = !isCameraPaused
         }
-        isCameraPaused = !isCameraPaused
     }
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
