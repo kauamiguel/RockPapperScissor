@@ -9,24 +9,32 @@ import Foundation
 import UIKit
 
 class BotOpponent{
-    var image : UIImage? 
+    var image : UIImage?
     var loop : Bool = true
+    var lastNumber: Int?
     
     //MARK: Function that choses a random move to play
     func randomPlay(){
+        let random = Int.random(in: 0...2)
+        
+        while let previous = lastNumber, random == previous {
             let random = Int.random(in: 0...2)
+        }
+        
+        lastNumber = random
+        
+        
+        switch random{
+        case 0:
+            self.image = UIImage(named: "Rock")
+        case 1:
+            self.image = UIImage(named: "Paper")
+        case 2:
+            self.image = UIImage(named: "Scissor")
             
-            switch random{
-            case 0:
-                self.image = UIImage(named: "Rock")
-            case 1:
-                self.image = UIImage(named: "Paper")
-            case 2:
-                self.image = UIImage(named: "Scissor")
-                
-            default:
-                fatalError("Out of scope")
-            }
+        default:
+            fatalError("Out of scope")
+        }
         
     }
     
@@ -38,16 +46,16 @@ class BotOpponent{
         
         return img
     }
-     
+    
     //MARK: Get&Set Loop
-     
-     func setLoop(_ input : Bool){
-         self.loop = input
-     }
-     
-     func getLoop() -> Bool{
-         return loop
-     }
+    
+    func setLoop(_ input : Bool){
+        self.loop = input
+    }
+    
+    func getLoop() -> Bool{
+        return loop
+    }
     
     init(image: UIImage? = nil, loop: Bool = true) {
         self.image = image
