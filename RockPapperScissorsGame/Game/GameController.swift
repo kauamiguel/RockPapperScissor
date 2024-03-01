@@ -8,10 +8,20 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     let coreMlResult = CoreMLResult()
     let captureSession = AVCaptureSession()
     var previewLayer: AVCaptureVideoPreviewLayer?
-    var isCameraPaused = false
+    var isRunningTrue = true
+    let imageView = UIImageView()
+    
+    private let opponent = BotOpponent()
+    var timer: Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //Configuring timer
+        timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(updateImage), userInfo: nil, repeats: true)
+        
+        self.view.backgroundColor = .gray
+        imagePosition()
         
         guard let captureDevice = AVCaptureDevice.default(for: AVMediaType.video) else { return }
         guard let input = try? AVCaptureDeviceInput(device: captureDevice) else { return }
@@ -40,9 +50,34 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let buttonY = view.frame.height - buttonHeight - 20 // Place at the bottom with some padding
         
         let freezeButton = UIButton(frame: CGRect(x: buttonX, y: buttonY, width: buttonWidth, height: buttonHeight))
-        freezeButton.setTitle("Freeze", for: .normal)
+        freezeButton.setTitle("Countdown", for: .normal)
         freezeButton.addTarget(self, action: #selector(toggleCameraFreeze), for: .touchUpInside)
         view.addSubview(freezeButton)
+    }
+    
+    @objc private func updateImage() {
+        opponent.randomPlay()
+        let image = opponent.getImage()
+        imageView.image = image
+    }
+    
+    func imagePosition(){
+        imageView.backgroundColor = .white
+        imageView.layer.cornerRadius = 10.0
+        imageView.layer.borderWidth = 2.0
+        imageView.layer.borderColor = UIColor.red.cgColor
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.zPosition = 2
+        view.addSubview(imageView)
+        
+        // Add Auto Layout constraints to center the image view
+        NSLayoutConstraint.activate([
+            imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            imageView.widthAnchor.constraint(equalToConstant: 180), // Adjust as needed
+            imageView.heightAnchor.constraint(equalToConstant: 250) // Adjust as needed
+        ])
     }
     
     func startCamera(){
@@ -55,12 +90,16 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @objc func toggleCameraFreeze() {
         DispatchQueue.global(qos: .background).async { [weak self] in
             guard let self = self else { return }
-            if isCameraPaused {
-                captureSession.startRunning()
-            } else {
+            
+            if isRunningTrue {
                 captureSession.stopRunning()
+                self.timer?.invalidate()
+            } else {
+                self.timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(updateImage), userInfo: nil, repeats: true)
+                captureSession.startRunning()
             }
-            isCameraPaused = !isCameraPaused
+            
+            isRunningTrue = !isRunningTrue
         }
     }
     
@@ -74,29 +113,10 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             guard let result = res.results as? [VNClassificationObservation] else { return }
             
             guard let observationData = result.first else { return }
-            
-            print(observationData.identifier, observationData.confidence)
+        
         }
         
         try? VNImageRequestHandler(cvPixelBuffer: buffer, options: [:]).perform([request])
     }
     
-    //Function that create a dountDown to take an automatic picture
-       func takePicture(){
-           var timeLeft = 3
-           
-           Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-
-               if timeLeft == 0{
-                   
-                   timer.invalidate()
-                   return
-               }
-               
-               print(timeLeft)
-               timeLeft -= 1
-           }
-       }
-    
 }
-
