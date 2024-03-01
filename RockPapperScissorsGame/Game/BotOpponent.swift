@@ -11,7 +11,8 @@ import UIKit
 class BotOpponent{
     var image : UIImage?
     var loop : Bool = true
-    var currentIndex = -1
+    var currentIndex = 0
+    let imageNames = ["rock", "paper", "scissors"]
     
     //MARK: Function that choses a random move to play
     func randomPlay(){
@@ -25,14 +26,14 @@ class BotOpponent{
         
         switch random{
         case 0:
-            self.image = UIImage(named: "Rock")
+            self.image = UIImage(named: imageNames[0])
         case 1:
-            self.image = UIImage(named: "Paper")
+            self.image = UIImage(named: imageNames[1])
         case 2:
-            self.image = UIImage(named: "Scissor")
+            self.image = UIImage(named: imageNames[2])
             
         default:
-            fatalError("Out of scope")
+           break
         }
         
     }

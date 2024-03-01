@@ -10,6 +10,8 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var previewLayer: AVCaptureVideoPreviewLayer?
     var isRunningTrue = true
     let imageView = UIImageView()
+    var coreMLClassification : String = ""
+    var imageStatus = UIImageView()
     
     private let opponent = BotOpponent()
     var timer: Timer?
@@ -50,7 +52,7 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let buttonY = view.frame.height - buttonHeight - 20 // Place at the bottom with some padding
         
         let freezeButton = UIButton(frame: CGRect(x: buttonX, y: buttonY, width: buttonWidth, height: buttonHeight))
-        freezeButton.setTitle("Countdown", for: .normal)
+        freezeButton.setTitle("Play", for: .normal)
         freezeButton.addTarget(self, action: #selector(toggleCameraFreeze), for: .touchUpInside)
         view.addSubview(freezeButton)
     }
@@ -88,20 +90,60 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     @objc func toggleCameraFreeze() {
-        DispatchQueue.global(qos: .background).async { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             
             if isRunningTrue {
                 captureSession.stopRunning()
                 self.timer?.invalidate()
+                showResult()
             } else {
+                imageStatus.removeFromSuperview()
                 self.timer = Timer.scheduledTimer(timeInterval: 0.3, target: self, selector: #selector(updateImage), userInfo: nil, repeats: true)
-                captureSession.startRunning()
+                
+                DispatchQueue.global(qos: .background).async {
+                    self.captureSession.startRunning()
+                }
+                
             }
             
             isRunningTrue = !isRunningTrue
         }
     }
+    
+    
+    func showResult(){
+        let currentIndex = opponent.currentIndex
+        let imageName = opponent.imageNames[currentIndex]
+        
+        view.addSubview(imageStatus)
+        
+        if imageName == self.coreMLClassification{
+            imageStatus.image = UIImage(named: "draw")
+        }else{
+            //Check if the bot won
+            if imageName == "rock" && self.coreMLClassification == "scissor" || imageName == "scissors" && self.coreMLClassification == "paper" || imageName == "paper" && self.coreMLClassification == "rock"{
+                
+                imageStatus.image = UIImage(named: "lose")
+                
+            }else{
+                //User won
+                imageStatus.image = UIImage(named: "win")
+            }
+        }
+        
+        imageStatus.translatesAutoresizingMaskIntoConstraints = false
+        imageStatus.layer.zPosition = 3
+        
+        NSLayoutConstraint.activate([
+            imageStatus.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -40),
+            imageStatus.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageStatus.widthAnchor.constraint(equalToConstant: 130), // Adjust as needed
+            imageStatus.heightAnchor.constraint(equalToConstant: 180) // Adjust as needed
+        ])
+        
+    }
+    
     
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
@@ -114,6 +156,7 @@ class GameController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             
             guard let observationData = result.first else { return }
         
+            self.coreMLClassification = observationData.identifier
         }
         
         try? VNImageRequestHandler(cvPixelBuffer: buffer, options: [:]).perform([request])
